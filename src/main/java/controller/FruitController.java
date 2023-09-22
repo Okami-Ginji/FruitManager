@@ -73,21 +73,25 @@ public class FruitController extends Menu {
         }
     }
     
-    public ArrayList<Fruit> checkListFruit(ArrayList<Fruit> list_F) {
+    public ArrayList<Fruit> refreshFruitList(ArrayList<Fruit> fruitsList) {
         ArrayList<Fruit> temp = new ArrayList<>();
-        for (int i=0; i<list_F.size(); i++) {
-            if(list_F.get(i).getQuantity() == 0) {
-                list_F.get(i+1).setId(list_F.get(i).getId());
-                temp.add(list_F.get(i+1));
-                i++;
-            }
-            else {
-                temp.add(list_F.get(i));
+        int n = fruitsList.size();
+
+        for (int i = 0; i < n; i++) {
+            Fruit currentFruit = fruitsList.get(i);
+            if (currentFruit.getQuantity() > 0) {
+                temp.add(currentFruit);
+            } else if (i + 1 < n) {
+                Fruit nextFruit = fruitsList.get(i + 1);
+                nextFruit.setId(currentFruit.getId());
+                temp.add(nextFruit);
+                i++; 
             }
         }
+
         return temp;
     }
-    
+
     public void displayFruit() {
         for (Fruit f : list_F) {
             System.out.println("Id: " + f.getId() + " - Name: " + f.getName() + " - Price: " + f.getPrice() + " - quantity:" + f.getQuantity() + " - origin: " + f.getOrigin());
@@ -95,7 +99,7 @@ public class FruitController extends Menu {
     }
 
     public void shopping() {
-        list_F = checkListFruit(list_F);
+        list_F = refreshFruitList(list_F);
         if (list_F.isEmpty()) {
             System.out.println("No Product");
             return;
